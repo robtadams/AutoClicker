@@ -1,38 +1,19 @@
-#https://realpython.com/python-gui-tkinter/#building-your-first-python-gui-application-with-tkinter
-
 import tkinter as tk
-import tkinter.ttk as ttk
-import time
 
-def main():
-    window = tk.Tk()
+window = tk.Tk()
 
-    """
-    label = tk.Label(
-        text="Hello, Tkinter",
-        foreground="white", # Set the text color to white
-        background="red",   # Set the background color to red
-        width=100,
-        height=10
-    )
-    """
+def handle_keypress(event):
+    print(event.char)
 
-    """
-    button = tk.Button(
-        text = "Click me!",
-        width = 25,
-        height = 5,
-        bg = "blue",
-        fg = "red"
-    )
-    """
-    label = tk.Label(text="Name")
-    entry = tk.Entry()
-    label.pack()
-    entry.pack()
-    while window.mainloop():
-        entry.get()
-        print(entry)
+def handle_click(event):
+    print("The button was clicked!")
 
-if __name__ == "__main__":
-    main()
+button = tk.Button(text="Click me!")
+
+button.pack()
+
+button.bind("<Button-1>", handle_click)
+
+window.bind("<Key>", handle_keypress)
+
+window.mainloop()
