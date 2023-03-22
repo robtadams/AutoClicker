@@ -1,4 +1,5 @@
 import tkinter as tk
+import pynput
 
 global TEST
 TEST = False
@@ -21,8 +22,12 @@ class clickerApp():
             label20 = tk.Label(master = window, background = "light gray")
             label20.grid(row = 2, column = 0, sticky = "nesw")
 
+        # Variables
         self.key = "F6"
         self.keyPrimer = False
+        self.clickRate = 1000
+        self.targetPosition = [-1, -1]
+        self.currentPosition = [-1, -1]
 
         # keyButton
         self.keyButton = tk.Button(master=window, text="Key", command = self.defineKey)
@@ -58,23 +63,41 @@ class clickerApp():
         # xEntry
         self.xEntry = tk.Entry(master = self.positionFrame)
         self.xEntry.grid(row = 0, column = 0, padx = 10)
+        if self.targetPosition[0] > 0:
+            self.xEntry.insert(0, self.position[0])
 
         # yEntry
         self.yEntry = tk.Entry(master = self.positionFrame)
         self.yEntry.grid(row = 0, column = 1, padx = 10)
+        if self.targetPosition[1] > 0:
+            self.yEntry.insert(0, self.position[1])
 
         # Window binds
         window.bind("<Key>", self.handleKeypress)
+        window.bind("<Button-1>", self.handleClick)
+        
 
         window.mainloop()
+
+
+    def motion(self, event):
+        x, y = event.x, event.y
+        print("{}, {}".format(x,y))
         
     def startAutoclicker(self):
-        print("Hi :)")
+        window.event_generate(
+            "<Button-1>",
+            x = self.targetPosition[0],
+            y = self.targetPosition[1]
+        )
     
     def defineKey(self):
         self.keyPrimer = True
         self.keyEntry.delete(0, tk.END)
         self.keyEntry.insert(0, "Enter a key...")
+
+    def handleClick(self, event):
+        print(event.x, event.y)
 
     def handleKeypress(self, event):
 
