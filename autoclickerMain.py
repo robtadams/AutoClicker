@@ -1,8 +1,17 @@
 import tkinter as tk
-import pynput
+import keyboard
+import mouse
 
 global TEST
 TEST = False
+
+class Keyboard():
+    def __init__(self, autoKey = ""):
+        return
+
+class Mouse():
+    def __init__(self, clickRate = 1000):
+        return
 
 class clickerApp():
     def __init__(self, window):
@@ -75,10 +84,6 @@ class clickerApp():
         # Window binds
         window.bind("<Key>", self.handleKeypress)
         window.bind("<Button-1>", self.handleClick)
-        
-
-        window.mainloop()
-
 
     def motion(self, event):
         x, y = event.x, event.y
@@ -119,3 +124,5 @@ class clickerApp():
         
 window = tk.Tk()
 clickerApp(window)
+window.mainloop()
+
