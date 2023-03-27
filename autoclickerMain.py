@@ -1,4 +1,5 @@
 import tkinter as tk
+from pynput import keyboard
 from keyboardClass import Keyboard
 from mouseClass import Mouse
 
@@ -24,23 +25,26 @@ class clickerApp():
             label20.grid(row = 2, column = 0, sticky = "nesw")
 
         # Variables
-        self.key = "F6"
+        self.targetKey = "*"
         self.targetKeyBool = False
         self.clickRate = 1000
         self.targetPosition = [-1, -1]
         self.currentPosition = [-1, -1]
         self.myMouse = Mouse()
-        self.myKeyboard = Keyboard()
-        self.myKeyboard.listen()
+        self.myKeyboard = Keyboard(targetKey = self.targetKey)
+        listener = keyboard.Listener(
+        on_press = self.myKeyboard.on_press,
+        on_release = self.myKeyboard.on_release)
+        listener.start()
 
         # keyButton
         self.keyButton = tk.Button(master=window, text="Key", command = self.setTargetKey)
         self.keyButton.grid(row = 0, column = 0, sticky = "nesw", padx = 50, pady = 10)
 
         # keyEntry
-        self.keyEntry = tk.Entry(master = window, text = "F6")
+        self.keyEntry = tk.Entry(master = window, text = self.targetKey)
         self.keyEntry.grid(row = 0, column = 1)
-        self.keyEntry.insert(0, self.key)
+        self.keyEntry.insert(0, self.targetKey)
 
         # rateLabel
         self.rateLabel = tk.Label(master = window, text = "Click Rate (ms)")
@@ -77,10 +81,21 @@ class clickerApp():
             self.yEntry.insert(0, self.position[1])
     
     def setTargetKey(self):
-        return
+
+        self.keyEntry.delete(0, tk.END)
+        self.keyEntry.insert(0, "Please enter a key....")
+        
+        while self.myKeyboard.getPressedKey() == "":
+            pass
+        self.targetKey = self.myKeyboard.getPressedKey()
+        self.myKeyboard.setTargetKey(self.targetKey)
+
+        self.keyEntry.delete(0, tk.END)
+        self.keyEntry.insert(0, self.targetKey)
+
+        
 
 window = tk.Tk()
 clickerApp(window)
-
 window.mainloop()
 
