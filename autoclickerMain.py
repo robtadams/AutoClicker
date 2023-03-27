@@ -1,17 +1,9 @@
 import tkinter as tk
-import keyboard
-import mouse
+from keyboardClass import Keyboard
+from mouseClass import Mouse
 
 global TEST
 TEST = False
-
-class Keyboard():
-    def __init__(self, autoKey = ""):
-        return
-
-class Mouse():
-    def __init__(self, clickRate = 1000):
-        return
 
 class clickerApp():
     def __init__(self, window):
@@ -33,13 +25,16 @@ class clickerApp():
 
         # Variables
         self.key = "F6"
-        self.keyPrimer = False
+        self.targetKeyBool = False
         self.clickRate = 1000
         self.targetPosition = [-1, -1]
         self.currentPosition = [-1, -1]
+        self.myMouse = Mouse()
+        self.myKeyboard = Keyboard()
+        self.myKeyboard.listen()
 
         # keyButton
-        self.keyButton = tk.Button(master=window, text="Key", command = self.defineKey)
+        self.keyButton = tk.Button(master=window, text="Key", command = self.setTargetKey)
         self.keyButton.grid(row = 0, column = 0, sticky = "nesw", padx = 50, pady = 10)
 
         # keyEntry
@@ -80,49 +75,12 @@ class clickerApp():
         self.yEntry.grid(row = 0, column = 1, padx = 10)
         if self.targetPosition[1] > 0:
             self.yEntry.insert(0, self.position[1])
-
-        # Window binds
-        window.bind("<Key>", self.handleKeypress)
-        window.bind("<Button-1>", self.handleClick)
-
-    def motion(self, event):
-        x, y = event.x, event.y
-        print("{}, {}".format(x,y))
-        
-    def startAutoclicker(self):
-        window.event_generate(
-            "<Button-1>",
-            x = self.targetPosition[0],
-            y = self.targetPosition[1]
-        )
     
-    def defineKey(self):
-        self.keyPrimer = True
-        self.keyEntry.delete(0, tk.END)
-        self.keyEntry.insert(0, "Enter a key...")
+    def setTargetKey(self):
+        return
 
-    def handleClick(self, event):
-        print(event.x, event.y)
-
-    def handleKeypress(self, event):
-
-        pressedKey = event.keysym
-        
-        if self.keyPrimer == True:
-            self.key = pressedKey
-            self.keyPrimer = False
-
-            self.keyEntry.delete(0, tk.END)
-            self.keyEntry.insert(0, str(self.key))
-            
-        elif pressedKey != self.key:
-            print(pressedKey)
-
-        else:
-            self.startAutoclicker()
-    
-        
 window = tk.Tk()
 clickerApp(window)
+
 window.mainloop()
 
