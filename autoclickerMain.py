@@ -1,4 +1,5 @@
 import tkinter as tk
+import threading
 from pynput import keyboard
 from keyboardClass import Keyboard
 from mouseClass import Mouse
@@ -24,17 +25,24 @@ class clickerApp():
             label20 = tk.Label(master = window, background = "light gray")
             label20.grid(row = 2, column = 0, sticky = "nesw")
 
-        # Variables
+        # Keyboard variables
         self.targetKey = "*"
-        self.targetKeyBool = False
+        self.targetKeyPressed = False
+
+        # Mouse variables
         self.clickRate = 1000
         self.targetPosition = [-1, -1]
         self.currentPosition = [-1, -1]
+
+        # Class construction
         self.myMouse = Mouse()
-        self.myKeyboard = Keyboard(targetKey = self.targetKey)
+        self.myKeyboard = Keyboard(self.targetKeyPressed, targetKey = self.targetKey)
+
+        # Key listener thread
         listener = keyboard.Listener(
         on_press = self.myKeyboard.on_press,
         on_release = self.myKeyboard.on_release)
+        
         listener.start()
 
         # keyButton
@@ -79,6 +87,10 @@ class clickerApp():
         self.yEntry.grid(row = 0, column = 1, padx = 10)
         if self.targetPosition[1] > 0:
             self.yEntry.insert(0, self.position[1])
+
+    def getTargetKeyPressed(self):
+
+        return self.targetKeyPressed
     
     def setTargetKey(self):
 
@@ -93,9 +105,13 @@ class clickerApp():
         self.keyEntry.delete(0, tk.END)
         self.keyEntry.insert(0, self.targetKey)
 
-        
-
+def threadFunction(targetKeyPressed):
+    var = True
+    while True:
+        print(targetKeyPressed)
+    
 window = tk.Tk()
-clickerApp(window)
-window.mainloop()
+app = clickerApp(window)
+x = threading.Thread(target = threadFunction, args=(app.getTargetKeyPressed(), ))
+x.start()
 

@@ -1,14 +1,15 @@
 from pynput import keyboard
 
 global TEST
-TEST = False
+TEST = True
 
 class Keyboard():
     
-    def __init__(self, targetKey = "]"):
+    def __init__(self, targetKeyPressed, targetKey = "]"):
 
         self.targetKey = targetKey
         self.pressedKey = ""
+        self.targetKeyPressed = targetKeyPressed
 
     def setTargetKey(self, targetKey):
 
@@ -29,6 +30,7 @@ class Keyboard():
             self.pressedKey = key.char
             if key.char == self.targetKey:
                 print("Target key was pressed...")
+                self.targetKeyPressed = True
         except:
             if key == keyboard.Key.esc:
                 quit()
@@ -37,12 +39,3 @@ class Keyboard():
         self.pressedKey = ""
         if TEST:
             print("{} was released".format(key))
-
-if __name__ == "__main__":
-
-    myKeyboard = Keyboard()
-    print(myKeyboard.getTargetKey())
-    listener = keyboard.Listener(
-    on_press= myKeyboard.on_press,
-    on_release = myKeyboard.on_release)
-    listener.start()
