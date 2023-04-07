@@ -7,15 +7,6 @@ from pynput import keyboard
 global TEST
 TEST = False
 
-global targetKey
-targetKey = "*"
-global targetKeyPressed
-targetKeyPressed = False
-global clickRate
-clickRate = 1000
-global targetPosition
-targetPosition = [-1, -1]
-
 class clickerApp():
     def __init__(self, window):
 
@@ -33,6 +24,16 @@ class clickerApp():
 
             label20 = tk.Label(master = window, background = "light gray")
             label20.grid(row = 2, column = 0, sticky = "nesw")
+
+        # Variables
+        global targetKey
+        targetKey = "*"
+        global targetKeyPressed
+        targetKeyPressed = False
+        global clickRate
+        clickRate = 1000
+        global targetPosition
+        targetPosition = [-1, -1]
 
         # Keyboard listener thread
         listener = keyboard.Listener(
@@ -94,6 +95,8 @@ class clickerApp():
         if TEST:
             print("{} was pressed".format(key))
 
+        global targetKey
+
         try:
             if key.char == targetKey:
                 if TEST:
@@ -132,12 +135,31 @@ class clickerApp():
                 clickBool = True
                 print("Stopping...")
 
-            
+    def handle_keypress(self, event):
+
+        #global setTargetKey
+        if setTargetKey:
+
+            self.keyEntry.delete(0, tk.END)
+            self.keyEntry.insert(0, event.char)
+            setTargetKey = False
+
+            try:
+
+                targetKey = event.char
+
+            except:
+
+                targetKey = "*"
+
+            print(targetKey)
 
     def setTargetKey(self):
 
         self.keyEntry.delete(0, tk.END)
         self.keyEntry.insert(0, "Please enter a key...")
+        global setTargetKey
+        setTargetKey = True
 
     def setClickRate(self):
 
@@ -152,3 +174,4 @@ class clickerApp():
 
 window = tk.Tk()
 app = clickerApp(window)
+window.bind("<Key>", app.handle_keypress)
