@@ -49,6 +49,8 @@ class clickerApp():
         controller.start()
 
         # keyButton
+        global setTargetKey
+        setTargetKey = False
         self.keyButton = tk.Button(master=window, text="Key", command = self.setTargetKey)
         self.keyButton.grid(row = 0, column = 0, sticky = "nesw", padx = 50, pady = 10)
 
@@ -67,8 +69,8 @@ class clickerApp():
         self.rateEntry.insert(0, clickRate)
 
         # positionLabel
-        self.positionLabel = tk.Label(master = window, text = "Mouse Position")
-        self.positionLabel.grid(row = 2, column = 0, pady = 10)
+        self.positionButton = tk.Button(master = window, text = "Mouse Position", command = self.setTargetPosition)
+        self.positionButton.grid(row = 2, column = 0, pady = 10)
 
         # positionFrame
         self.positionFrame = tk.Frame(
@@ -81,14 +83,10 @@ class clickerApp():
         # xEntry
         self.xEntry = tk.Entry(master = self.positionFrame)
         self.xEntry.grid(row = 0, column = 0, padx = 10)
-        #if self.wrapVar.getTargetPosition()[0] > 0:
-        #    self.xEntry.insert(0, self.position[0])
 
         # yEntry
         self.yEntry = tk.Entry(master = self.positionFrame)
         self.yEntry.grid(row = 0, column = 1, padx = 10)
-        #if self.wrapVar.getTargetPosition()[1] > 0:
-        #    self.yEntry.insert(0, self.position[1])
 
     def on_press(self, key):
 
@@ -125,7 +123,15 @@ class clickerApp():
                     
                     clickBool = False
                     print("Starting...")
-                    
+
+                if int(targetPosition[0]) >= 0:
+                    print("Moving mouse X to {}".format(targetPosition[0]))
+
+                if int(targetPosition[1]) >= 0:
+                    print("Moving mouse Y to {}".format(targetPosition[1]))
+
+                mouse.move(targetPosition[0], targetPosition[1], absolute = True)
+                
                 print("Click!")
                 mouse.click()
                 time.sleep(clickRate / 1000)
@@ -137,15 +143,17 @@ class clickerApp():
 
     def handle_keypress(self, event):
 
-        #global setTargetKey
+        global setTargetKey
         if setTargetKey:
 
+            global targetKey
             self.keyEntry.delete(0, tk.END)
             self.keyEntry.insert(0, event.char)
             setTargetKey = False
 
             try:
 
+                
                 targetKey = event.char
 
             except:
@@ -167,10 +175,28 @@ class clickerApp():
         try:
 
             clickRate = int(self.rateEntry.get())
+            print("{}ms click rate...".format(clickRate))
 
         except:
 
             clickRate = 1000
+
+    def setTargetPosition(self):
+
+        xPos = self.xEntry.get()
+        yPos = self.yEntry.get()
+        
+        if xPos == "":
+            xPos = -1
+
+        if yPos == "":
+            yPos = -1
+
+        print("xPos: {0}\nyPos: {1}".format(xPos, yPos))
+
+        global targetPosition
+        targetPosition = [xPos, yPos]
+        
 
 window = tk.Tk()
 app = clickerApp(window)
