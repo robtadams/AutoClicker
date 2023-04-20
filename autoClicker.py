@@ -34,6 +34,8 @@ class clickerApp():
         clickRate = 1000
         global targetPosition
         targetPosition = [-1, -1]
+        global setTargetKey
+        setTargetKey = False
 
         # Keyboard listener thread
         listener = keyboard.Listener(
@@ -49,8 +51,6 @@ class clickerApp():
         controller.start()
 
         # keyButton
-        global setTargetKey
-        setTargetKey = False
         self.keyButton = tk.Button(master=window, text="Key", command = self.setTargetKey)
         self.keyButton.grid(row = 0, column = 0, sticky = "nesw", padx = 50, pady = 10)
 
@@ -68,7 +68,7 @@ class clickerApp():
         self.rateEntry.grid(row = 1, column = 1)
         self.rateEntry.insert(0, clickRate)
 
-        # positionLabel
+        # positionButton
         self.positionButton = tk.Button(master = window, text = "Mouse Position", command = self.setTargetPosition)
         self.positionButton.grid(row = 2, column = 0, pady = 10)
 
